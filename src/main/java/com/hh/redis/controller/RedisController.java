@@ -5,11 +5,11 @@ import com.hh.redis.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -95,4 +95,32 @@ public class RedisController {
         }
         return "ok";
     }
+
+    private static String channel1 = "channel:1";
+    private static String channel2 = "channel:2";
+
+    @RequestMapping(value = "publish1",method = RequestMethod.POST)
+    @ResponseBody
+    public String publishMessage1(@RequestBody String message) {
+        try {
+            stringRedisTemplate.convertAndSend(channel1,message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "fail";
+        }
+        return "ok";
+    }
+
+    @RequestMapping(value = "publish2",method = RequestMethod.POST)
+    @ResponseBody
+    public String publishMessage2(@RequestBody String message) {
+        try {
+            stringRedisTemplate.convertAndSend(channel2,message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "fail";
+        }
+        return "ok";
+    }
+
 }
